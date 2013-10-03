@@ -1,4 +1,7 @@
 package com.mimming.sugarglider;
+//Code for this project is licensed under APL 2.0 and content is licensed under the Creative Commons Attribution 3.0 License.
+//https://github.com/mimming/sugarglider
+//Thanks to Jenny Murphy of Google
 
 import java.io.InputStream;
 import java.util.List;
