@@ -8,6 +8,9 @@
         android:minSdkVersion="15"
         android:targetSdkVersion="15" />
 	<uses-permission android:name="android.permission.RECORD_AUDIO" />
+	<uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
+	<uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
+	<uses-permission android:name="android.permission.INTERNET"/>
 
     <application
         android:allowBackup="true"
@@ -27,6 +30,7 @@
         <activity android:name="com.google.glass.samples.level.LevelActivity"></activity>
         <activity android:name="com.google.glass.samples.stopwatch.StopWatchActivity"></activity>
         <activity android:name="com.google.glass.samples.waveform.WaveformActivity"></activity>
+        <activity android:name="com.mimming.sugarglider.MainActivity"></activity>
     </application>
 
 </manifest>
