@@ -62,7 +62,7 @@ public class CompassActivity extends Activity
     mRotationMatrix = new float[16];
     mOrientation = new float[3];
   }
-
+  
   @Override
   protected void onResume() {
     super.onResume();
@@ -73,6 +73,37 @@ public class CompassActivity extends Activity
   protected void onPause() {
     super.onPause();
     stopTracking();
+  }
+
+  /**
+   * Starts tracking the user's heading.
+   */
+  private void startTracking() {
+    mSensorManager.registerListener(this,
+        mSensorManager.getDefaultSensor(Sensor.TYPE_ROTATION_VECTOR),
+        SensorManager.SENSOR_DELAY_UI);
+  }
+
+  /**
+   * Stops tracking the user's heading.
+   */
+  private void stopTracking() {
+    mSensorManager.unregisterListener(this);
+  }
+
+  @Override
+  public void onSensorChanged(SensorEvent event) {
+    if (event.sensor.getType() == Sensor.TYPE_ROTATION_VECTOR) {
+      // Get the current heading from the sensor, then update the graphical
+      // compass.
+      SensorManager.getRotationMatrixFromVector(mRotationMatrix, event.values);
+      SensorManager.remapCoordinateSystem(mRotationMatrix,
+          SensorManager.AXIS_X, SensorManager.AXIS_Z, mRotationMatrix);
+      SensorManager.getOrientation(mRotationMatrix, mOrientation);
+
+      float heading = (float) Math.toDegrees(mOrientation[0]);
+      mCompassView.setHeading(heading);
+    }
   }
 
   @Override
@@ -103,21 +134,6 @@ public class CompassActivity extends Activity
   }
 
   @Override
-  public void onSensorChanged(SensorEvent event) {
-    if (event.sensor.getType() == Sensor.TYPE_ROTATION_VECTOR) {
-      // Get the current heading from the sensor, then update the graphical
-      // compass.
-      SensorManager.getRotationMatrixFromVector(mRotationMatrix, event.values);
-      SensorManager.remapCoordinateSystem(mRotationMatrix,
-          SensorManager.AXIS_X, SensorManager.AXIS_Z, mRotationMatrix);
-      SensorManager.getOrientation(mRotationMatrix, mOrientation);
-
-      float heading = (float) Math.toDegrees(mOrientation[0]);
-      mCompassView.setHeading(heading);
-    }
-  }
-
-  @Override
   public void onAccuracyChanged(Sensor sensor, int accuracy) {
     // We don't need to do anything here; a full app may want to display a
     // message to the user if the sensor's accuracy becomes unreliable.
@@ -129,22 +145,6 @@ public class CompassActivity extends Activity
     // to do anything here.
   }
 
-  /**
-   * Starts tracking the user's heading.
-   */
-  private void startTracking() {
-    mSensorManager.registerListener(this,
-        mSensorManager.getDefaultSensor(Sensor.TYPE_ROTATION_VECTOR),
-        SensorManager.SENSOR_DELAY_UI);
-  }
-
-  /**
-   * Stops tracking the user's heading.
-   */
-  private void stopTracking() {
-    mSensorManager.unregisterListener(this);
-  }
-  
   /**
    * Converts the specified heading angle into an index between 0-15 that can
    * be used to retrieve the direction name for that heading (known as "boxing
